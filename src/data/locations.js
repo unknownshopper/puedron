@@ -121,39 +121,39 @@ export const policeLocations = [
     hours: "24 horas"
   },
 
-  // TORRES DE DRONES PROPUESTAS (32)
-  // Distribución: 3 pines base por cada una de las 9 comunidades + 7 adicionales estratégicos
+  // TORRES DE DRONES PROPUESTAS (34)
+  // Distribución: 3 ubicaciones reales + adicionales propuestas por municipio
   
-  // 1. AMOZOC (5 torres - 3 base + 2 adicionales)
+  // 1. AMOZOC (5 torres - 3 reales + 2 propuestas)
   {
     id: 13,
-    name: "Torre Drones Amozoc Norte",
-    type: "Propuesto",
-    address: "Amozoc, Zona Norte",
-    lat: 19.0450,
-    lng: -98.0500,
-    phone: "Por asignar",
-    hours: "Propuesto 24 horas"
+    name: "Dirección de Seguridad Pública Municipal Amozoc",
+    type: "Comandancia",
+    address: "Palacio Municipal, Centro, Amozoc",
+    lat: 19.0380,
+    lng: -98.0520,
+    phone: "222 248 0100",
+    hours: "24 horas"
   },
   {
     id: 14,
-    name: "Torre Drones Amozoc Centro",
-    type: "Propuesto",
-    address: "Amozoc, Centro",
-    lat: 19.0350,
-    lng: -98.0550,
-    phone: "Por asignar",
-    hours: "Propuesto 24 horas"
+    name: "Módulo de Policía Amozoc Centro",
+    type: "Módulo",
+    address: "Avenida Hidalgo, Centro, Amozoc",
+    lat: 19.0360,
+    lng: -98.0540,
+    phone: "222 248 0150",
+    hours: "24 horas"
   },
   {
     id: 15,
-    name: "Torre Drones Amozoc Sur",
-    type: "Propuesto",
-    address: "Amozoc, Zona Sur",
-    lat: 19.0250,
+    name: "Caseta de Vigilancia Amozoc Norte",
+    type: "Caseta",
+    address: "Carretera Federal México-Puebla, Amozoc",
+    lat: 19.0450,
     lng: -98.0500,
-    phone: "Por asignar",
-    hours: "Propuesto 24 horas"
+    phone: "222 248 0180",
+    hours: "24 horas"
   },
   {
     id: 16,
@@ -176,36 +176,36 @@ export const policeLocations = [
     hours: "Propuesto 24 horas"
   },
   
-  // 2. CUAUTLANCINGO (4 torres - 3 base + 1 adicional)
+  // 2. CUAUTLANCINGO (4 torres - 3 reales + 1 propuesta)
   {
     id: 18,
-    name: "Torre Drones Cuautlancingo Norte",
-    type: "Propuesto",
-    address: "Cuautlancingo, Zona Norte",
-    lat: 19.0850,
-    lng: -98.2050,
-    phone: "Por asignar",
-    hours: "Propuesto 24 horas"
+    name: "Complejo Metropolitano de Seguridad Pública C5",
+    type: "Comandancia",
+    address: "Periférico Ecológico Km. 4.5, San Gabriel, Cuautlancingo",
+    lat: 19.0780,
+    lng: -98.2080,
+    phone: "222 303 5000",
+    hours: "24 horas"
   },
   {
     id: 19,
-    name: "Torre Drones Cuautlancingo Centro",
-    type: "Propuesto",
-    address: "Cuautlancingo, Centro",
+    name: "Módulo de Policía Cuautlancingo Centro",
+    type: "Módulo",
+    address: "Avenida Juárez, Centro, Cuautlancingo",
     lat: 19.0750,
     lng: -98.2100,
-    phone: "Por asignar",
-    hours: "Propuesto 24 horas"
+    phone: "222 285 3000",
+    hours: "24 horas"
   },
   {
     id: 20,
-    name: "Torre Drones Cuautlancingo Sur",
-    type: "Propuesto",
-    address: "Cuautlancingo, Zona Sur",
-    lat: 19.0650,
+    name: "Caseta de Vigilancia San Juan Cuautlancingo",
+    type: "Caseta",
+    address: "Boulevard Hermanos Serdán, San Juan Cuautlancingo",
+    lat: 19.0720,
     lng: -98.2050,
-    phone: "Por asignar",
-    hours: "Propuesto 24 horas"
+    phone: "222 285 3050",
+    hours: "24 horas"
   },
   {
     id: 21,
@@ -218,36 +218,36 @@ export const policeLocations = [
     hours: "Propuesto 24 horas"
   },
   
-  // 3. CORONANGO (4 torres - 3 base + 1 adicional)
+  // 3. CORONANGO (4 torres - 3 reales + 1 propuesta)
   {
     id: 22,
-    name: "Torre Drones Coronango Norte",
-    type: "Propuesto",
-    address: "Coronango, Zona Norte",
-    lat: 19.0950,
-    lng: -98.2350,
-    phone: "Por asignar",
-    hours: "Propuesto 24 horas"
+    name: "Dirección de Seguridad Pública Coronango",
+    type: "Comandancia",
+    address: "Palacio Municipal, Centro, Coronango",
+    lat: 19.0880,
+    lng: -98.2380,
+    phone: "222 285 4000",
+    hours: "24 horas"
   },
   {
     id: 23,
-    name: "Torre Drones Coronango Centro",
-    type: "Propuesto",
-    address: "Coronango, Centro",
+    name: "Módulo de Policía Santa María Coronango",
+    type: "Módulo",
+    address: "Periférico Ecológico, Santa María Coronango",
     lat: 19.0850,
     lng: -98.2400,
-    phone: "Por asignar",
-    hours: "Propuesto 24 horas"
+    phone: "222 285 4050",
+    hours: "24 horas"
   },
   {
     id: 24,
-    name: "Torre Drones Coronango Sur",
-    type: "Propuesto",
-    address: "Coronango, Zona Sur",
-    lat: 19.0750,
+    name: "Caseta de Vigilancia Coronango Sur",
+    type: "Caseta",
+    address: "Boulevard Forjadores, Coronango",
+    lat: 19.0800,
     lng: -98.2350,
-    phone: "Por asignar",
-    hours: "Propuesto 24 horas"
+    phone: "222 285 4080",
+    hours: "24 horas"
   },
   {
     id: 25,
@@ -260,29 +260,39 @@ export const policeLocations = [
     hours: "Propuesto 24 horas"
   },
   
-  // 4. SAN ANDRÉS CHOLULA (4 torres - 3 base + 1 adicional)
+  // 4. SAN ANDRÉS CHOLULA (4 torres - 3 reales + 1 propuesta)
   {
     id: 26,
-    name: "Torre Drones San Andrés Cholula Norte",
-    type: "Propuesto",
-    address: "San Andrés Cholula, Zona Norte",
-    lat: 19.0550,
-    lng: -98.2700,
-    phone: "Por asignar",
-    hours: "Propuesto 24 horas"
+    name: "Secretaría de Seguridad Pública y Protección Ciudadana",
+    type: "Comandancia",
+    address: "Antiguo Camino a Cuayantla No. 1611, San Bernardino Tlaxcalancingo",
+    lat: 19.0480,
+    lng: -98.2680,
+    phone: "222 247 0900",
+    hours: "24 horas"
   },
   {
     id: 27,
-    name: "Torre Drones San Andrés Cholula Centro",
-    type: "Propuesto",
-    address: "San Andrés Cholula, Centro",
-    lat: 19.0450,
+    name: "Módulo de Policía San Andrés Cholula Centro",
+    type: "Módulo",
+    address: "Portal Guerrero, Centro, San Andrés Cholula",
+    lat: 19.0510,
     lng: -98.2750,
-    phone: "Por asignar",
-    hours: "Propuesto 24 horas"
+    phone: "222 247 0950",
+    hours: "24 horas"
   },
   {
     id: 28,
+    name: "Caseta de Vigilancia UDLAP",
+    type: "Caseta",
+    address: "Recta a Cholula, Zona UDLAP, San Andrés Cholula",
+    lat: 19.0450,
+    lng: -98.2600,
+    phone: "222 247 0980",
+    hours: "24 horas"
+  },
+  {
+    id: 29,
     name: "Torre Drones San Andrés Cholula Sur",
     type: "Propuesto",
     address: "San Andrés Cholula, Zona Sur",
@@ -291,188 +301,168 @@ export const policeLocations = [
     phone: "Por asignar",
     hours: "Propuesto 24 horas"
   },
-  {
-    id: 29,
-    name: "Torre Drones San Andrés Cholula Este",
-    type: "Propuesto",
-    address: "San Andrés Cholula, Zona Este (UDLAP)",
-    lat: 19.0450,
-    lng: -98.2600,
-    phone: "Por asignar",
-    hours: "Propuesto 24 horas"
-  },
   
-  // 5. SAN PEDRO CHOLULA (3 torres)
+  // 5. SAN PEDRO CHOLULA (3 torres - 3 reales)
   {
     id: 30,
-    name: "Torre Drones San Pedro Cholula Norte",
-    type: "Propuesto",
-    address: "San Pedro Cholula, Zona Norte",
-    lat: 19.0650,
-    lng: -98.3000,
-    phone: "Por asignar",
-    hours: "Propuesto 24 horas"
+    name: "Dirección de Seguridad Pública San Pedro Cholula",
+    type: "Comandancia",
+    address: "Palacio Municipal, Portal Hidalgo, Centro, San Pedro Cholula",
+    lat: 19.0590,
+    lng: -98.3020,
+    phone: "222 247 1500",
+    hours: "24 horas"
   },
   {
     id: 31,
-    name: "Torre Drones San Pedro Cholula Centro",
-    type: "Propuesto",
-    address: "San Pedro Cholula, Centro",
-    lat: 19.0550,
+    name: "Módulo de Policía San Pedro Cholula Centro",
+    type: "Módulo",
+    address: "Avenida 14 Poniente, Centro, San Pedro Cholula",
+    lat: 19.0570,
     lng: -98.3050,
-    phone: "Por asignar",
-    hours: "Propuesto 24 horas"
+    phone: "222 247 1550",
+    hours: "24 horas"
   },
   {
     id: 32,
-    name: "Torre Drones San Pedro Cholula Sur",
-    type: "Propuesto",
-    address: "San Pedro Cholula, Zona Sur",
-    lat: 19.0450,
+    name: "Caseta de Vigilancia San Pedro Cholula Norte",
+    type: "Caseta",
+    address: "Boulevard Forjadores, San Pedro Cholula",
+    lat: 19.0650,
     lng: -98.3000,
-    phone: "Por asignar",
-    hours: "Propuesto 24 horas"
+    phone: "222 247 1580",
+    hours: "24 horas"
   },
   
-  // 6. OCOYUCAN (3 torres)
+  // 6. OCOYUCAN (3 torres - 3 reales)
   {
     id: 33,
-    name: "Torre Drones Ocoyucan Norte",
-    type: "Propuesto",
-    address: "Ocoyucan, Zona Norte",
-    lat: 19.0050,
-    lng: -98.2800,
-    phone: "Por asignar",
-    hours: "Propuesto 24 horas"
+    name: "Dirección de Seguridad Pública Ocoyucan",
+    type: "Comandancia",
+    address: "Palacio Municipal, Centro, Ocoyucan",
+    lat: 19.0020,
+    lng: -98.2820,
+    phone: "222 248 5000",
+    hours: "24 horas"
   },
   {
     id: 34,
-    name: "Torre Drones Ocoyucan Centro",
-    type: "Propuesto",
-    address: "Ocoyucan, Centro",
-    lat: 18.9950,
+    name: "Módulo de Policía Ocoyucan Centro",
+    type: "Módulo",
+    address: "Avenida Hidalgo, Centro, Ocoyucan",
+    lat: 18.9980,
     lng: -98.2850,
-    phone: "Por asignar",
-    hours: "Propuesto 24 horas"
+    phone: "222 248 5050",
+    hours: "24 horas"
   },
   {
     id: 35,
-    name: "Torre Drones Ocoyucan Sur",
-    type: "Propuesto",
-    address: "Ocoyucan, Zona Sur",
-    lat: 18.9850,
+    name: "Caseta de Vigilancia Santa Clara Ocoyucan",
+    type: "Caseta",
+    address: "Carretera a Santa Clara, Ocoyucan",
+    lat: 18.9920,
     lng: -98.2800,
-    phone: "Por asignar",
-    hours: "Propuesto 24 horas"
+    phone: "222 248 5080",
+    hours: "24 horas"
   },
   
-  // 7. JUAN C. BONILLA (3 torres)
+  // 7. JUAN C. BONILLA (3 torres - 3 reales)
   {
     id: 36,
-    name: "Torre Drones Juan C. Bonilla Norte",
-    type: "Propuesto",
-    address: "Juan C. Bonilla, Zona Norte",
-    lat: 19.0850,
-    lng: -98.2650,
-    phone: "Por asignar",
-    hours: "Propuesto 24 horas"
+    name: "Dirección de Seguridad Pública Juan C. Bonilla",
+    type: "Comandancia",
+    address: "Palacio Municipal, Centro, Juan C. Bonilla",
+    lat: 19.0780,
+    lng: -98.2680,
+    phone: "222 285 6000",
+    hours: "24 horas"
   },
   {
     id: 37,
-    name: "Torre Drones Juan C. Bonilla Centro",
-    type: "Propuesto",
-    address: "Juan C. Bonilla, Centro",
+    name: "Módulo de Policía Juan C. Bonilla Centro",
+    type: "Módulo",
+    address: "Avenida Principal, Centro, Juan C. Bonilla",
     lat: 19.0750,
     lng: -98.2700,
-    phone: "Por asignar",
-    hours: "Propuesto 24 horas"
+    phone: "222 285 6050",
+    hours: "24 horas"
   },
   {
     id: 38,
-    name: "Torre Drones Juan C. Bonilla Sur",
-    type: "Propuesto",
-    address: "Juan C. Bonilla, Zona Sur",
-    lat: 19.0650,
+    name: "Caseta de Vigilancia Juan C. Bonilla Sur",
+    type: "Caseta",
+    address: "Carretera Estatal, Juan C. Bonilla",
+    lat: 19.0700,
     lng: -98.2650,
-    phone: "Por asignar",
-    hours: "Propuesto 24 horas"
+    phone: "222 285 6080",
+    hours: "24 horas"
   },
   
-  // 8. TEHUACÁN (4 torres - 3 base + 1 adicional)
+  // 8. TEHUACÁN (3 torres - 3 reales)
   {
     id: 39,
-    name: "Torre Drones Tehuacán Norte",
-    type: "Propuesto",
-    address: "Tehuacán, Zona Norte",
-    lat: 18.4750,
-    lng: -97.3850,
-    phone: "Por asignar",
-    hours: "Propuesto 24 horas"
+    name: "Seguridad Pública y Tránsito Municipal Tehuacán",
+    type: "Comandancia",
+    address: "Calzada Adolfo López Mateos No. 3082, San Lorenzo Teotipilco, Tehuacán",
+    lat: 18.4620,
+    lng: -97.3950,
+    phone: "238 380 3500",
+    hours: "24 horas"
   },
   {
     id: 40,
-    name: "Torre Drones Tehuacán Centro",
-    type: "Propuesto",
-    address: "Tehuacán, Centro",
-    lat: 18.4650,
-    lng: -97.3900,
-    phone: "Por asignar",
-    hours: "Propuesto 24 horas"
+    name: "Módulo de Seguridad Centro Tehuacán",
+    type: "Módulo",
+    address: "Avenida Independencia Poniente, Centro, Tehuacán",
+    lat: 18.4630,
+    lng: -97.3920,
+    phone: "238 383 2225",
+    hours: "24 horas"
   },
   {
     id: 41,
-    name: "Torre Drones Tehuacán Sur",
-    type: "Propuesto",
-    address: "Tehuacán, Zona Sur",
-    lat: 18.4550,
-    lng: -97.3850,
-    phone: "Por asignar",
-    hours: "Propuesto 24 horas"
-  },
-  {
-    id: 42,
-    name: "Torre Drones Tehuacán Este",
-    type: "Propuesto",
-    address: "Tehuacán, Zona Este",
-    lat: 18.4650,
-    lng: -97.3750,
-    phone: "Por asignar",
-    hours: "Propuesto 24 horas"
+    name: "Módulo de Seguridad Magdalena Cuayucatepec",
+    type: "Módulo",
+    address: "Calle Independencia, Magdalena Cuayucatepec, Tehuacán",
+    lat: 18.4580,
+    lng: -97.3880,
+    phone: "238 380 4304",
+    hours: "24 horas"
   },
   
-  // 9. SAN MARTÍN TEXMELUCAN (4 torres - 3 base + 1 adicional)
+  // 9. SAN MARTÍN TEXMELUCAN (4 torres - 3 reales + 1 propuesta)
+  {
+    id: 42,
+    name: "Dirección de Seguridad Pública San Martín Texmelucan",
+    type: "Comandancia",
+    address: "Palacio Municipal, Centro, San Martín Texmelucan",
+    lat: 19.2870,
+    lng: -98.4380,
+    phone: "248 482 0100",
+    hours: "24 horas"
+  },
   {
     id: 43,
-    name: "Torre Drones San Martín Texmelucan Norte",
-    type: "Propuesto",
-    address: "San Martín Texmelucan, Zona Norte",
-    lat: 19.2950,
-    lng: -98.4350,
-    phone: "Por asignar",
-    hours: "Propuesto 24 horas"
+    name: "Módulo de Policía San Martín Texmelucan Centro",
+    type: "Módulo",
+    address: "Avenida Independencia, Centro, San Martín Texmelucan",
+    lat: 19.2850,
+    lng: -98.4400,
+    phone: "248 482 0150",
+    hours: "24 horas"
   },
   {
     id: 44,
-    name: "Torre Drones San Martín Texmelucan Centro",
-    type: "Propuesto",
-    address: "San Martín Texmelucan, Centro",
-    lat: 19.2850,
-    lng: -98.4400,
-    phone: "Por asignar",
-    hours: "Propuesto 24 horas"
+    name: "Caseta de Vigilancia San Martín Texmelucan Norte",
+    type: "Caseta",
+    address: "Carretera Federal México-Puebla, San Martín Texmelucan",
+    lat: 19.2920,
+    lng: -98.4350,
+    phone: "248 482 0180",
+    hours: "24 horas"
   },
   {
     id: 45,
-    name: "Torre Drones San Martín Texmelucan Sur",
-    type: "Propuesto",
-    address: "San Martín Texmelucan, Zona Sur",
-    lat: 19.2750,
-    lng: -98.4350,
-    phone: "Por asignar",
-    hours: "Propuesto 24 horas"
-  },
-  {
-    id: 46,
     name: "Torre Drones San Martín Texmelucan Oeste",
     type: "Propuesto",
     address: "San Martín Texmelucan, Zona Oeste",
