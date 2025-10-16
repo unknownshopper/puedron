@@ -34,3 +34,306 @@ body {
   margin: 0;
   min-width: 200px;
 }
+
+/* Estilos para vehículos móviles */
+.vehicle-marker {
+  background: none;
+  border: none;
+  transition: transform 0.3s ease-out;
+}
+
+.vehicle-marker svg {
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+/* Estilos para bases de drones con luces intermitentes */
+.drone-station-container {
+  background: none;
+  border: none;
+}
+
+.drone-station-marker {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Luces de policía intermitentes */
+.drone-station-lights {
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 2;
+}
+
+.police-light {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  box-shadow: 0 0 10px currentColor;
+}
+
+.police-light.red {
+  background-color: #ef4444;
+  animation: blinkRed 1s infinite;
+}
+
+.police-light.blue {
+  background-color: #3b82f6;
+  animation: blinkBlue 1s infinite;
+  animation-delay: 0.5s;
+}
+
+@keyframes blinkRed {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 15px #ef4444, 0 0 25px #ef4444;
+  }
+  50% {
+    opacity: 0.3;
+    box-shadow: 0 0 5px #ef4444;
+  }
+}
+
+@keyframes blinkBlue {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 15px #3b82f6, 0 0 25px #3b82f6;
+  }
+  50% {
+    opacity: 0.3;
+    box-shadow: 0 0 5px #3b82f6;
+  }
+}
+
+/* Imagen del dron */
+.drone-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  z-index: 1;
+  position: relative;
+}
+
+/* Pulso de fondo */
+.drone-station-pulse {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, rgba(239, 68, 68, 0.3) 50%, transparent 70%);
+  animation: pulse 2s infinite;
+  z-index: 0;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+}
+
+/* Hover effect */
+.drone-station-marker:hover .drone-icon {
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+}
+
+.drone-station-marker:hover .drone-station-pulse {
+  animation-duration: 1s;
+}
+
+/* Estado inactivo de las bases */
+.drone-station-marker.inactive .drone-icon {
+  opacity: 0.3;
+  filter: grayscale(80%) drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+.drone-station-marker.inactive .drone-station-pulse {
+  display: none;
+}
+
+.drone-station-marker.inactive .drone-station-lights {
+  display: none;
+}
+
+/* Transición suave entre estados */
+.drone-station-marker {
+  transition: all 0.5s ease-in-out;
+}
+
+.drone-icon {
+  transition: opacity 0.5s ease-in-out, filter 0.5s ease-in-out;
+}
+
+/* Clase helper para ocultar elementos */
+.hidden {
+  display: none !important;
+}
+
+/* Luces de sirena MÁS RÁPIDAS (alternancia rápida) */
+.drone-station-lights-fast {
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 2;
+}
+
+.police-light-fast {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  box-shadow: 0 0 10px currentColor;
+}
+
+.police-light-fast.red {
+  background-color: #ef4444;
+  animation: blinkRedFast 0.4s infinite;
+}
+
+.police-light-fast.blue {
+  background-color: #3b82f6;
+  animation: blinkBlueFast 0.4s infinite;
+  animation-delay: 0.2s;
+}
+
+@keyframes blinkRedFast {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 20px #ef4444, 0 0 30px #ef4444, 0 0 40px #ef4444;
+    transform: scale(1.2);
+  }
+  50% {
+    opacity: 0.2;
+    box-shadow: 0 0 5px #ef4444;
+    transform: scale(0.8);
+  }
+}
+
+@keyframes blinkBlueFast {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 20px #3b82f6, 0 0 30px #3b82f6, 0 0 40px #3b82f6;
+    transform: scale(1.2);
+  }
+  50% {
+    opacity: 0.2;
+    box-shadow: 0 0 5px #3b82f6;
+    transform: scale(0.8);
+  }
+}
+
+/* Dron volando */
+.flying-drone-container {
+  background: none;
+  border: none;
+}
+
+.flying-drone-marker {
+  position: relative;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: droneFloat 2s ease-in-out infinite;
+}
+
+@keyframes droneFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.flying-drone-lights {
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 2;
+}
+
+.flying-drone-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+  z-index: 1;
+  position: relative;
+  animation: droneRotate 3s linear infinite;
+}
+
+@keyframes droneRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Tooltip de emergencia permanente */
+.emergency-tooltip {
+  background: linear-gradient(135deg, #fee2e2 0%, #dbeafe 100%) !important;
+  border: 2px solid #ef4444 !important;
+  border-radius: 8px !important;
+  padding: 4px 8px !important;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4) !important;
+  animation: emergencyPulse 1s infinite;
+  font-weight: bold;
+}
+
+.emergency-tooltip::before {
+  border-top-color: #ef4444 !important;
+}
+
+@keyframes emergencyPulse {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(239, 68, 68, 0.8);
+  }
+}
+
+.drone-icon-base {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  z-index: 1;
+  position: relative;
+}
+
+/* Animación para tarjetas de emergencia */
+@keyframes emergencyCardPulse {
+  0%, 100% {
+    box-shadow: 0 4px 6px rgba(239, 68, 68, 0.1);
+  }
+  50% {
+    box-shadow: 0 8px 16px rgba(239, 68, 68, 0.3);
+  }
+}

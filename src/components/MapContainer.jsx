@@ -3,6 +3,8 @@ import { MapContainer as LeafletMap, TileLayer, Marker, Popup, useMap } from 're
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Phone, Clock } from 'lucide-react';
+import MovingVehicles from './MovingVehicles';
+import DroneStations from './DroneStations';
 
 // Componente para centrar el mapa cuando se selecciona una ubicación
 function MapController({ selectedLocation }) {
@@ -62,8 +64,7 @@ const createCustomIcon = (type) => {
   });
 };
 
-function MapContainer({ locations, selectedLocation, onLocationSelect }) {
-  const center = [19.0414, -98.2063]; // Centro de Puebla
+function MapContainer({ locations, selectedLocation, onLocationSelect, onDronesUpdate, onActiveDronesUpdate }) {  const center = [19.0414, -98.2063]; // Centro de Puebla
   
   return (
     <div className="w-full h-full relative">
@@ -114,8 +115,12 @@ function MapContainer({ locations, selectedLocation, onLocationSelect }) {
                 </span>
               </div>
             </Popup>
-          </Marker>
+            </Marker>
         ))}
+        
+        <MovingVehicles onVehiclesUpdate={onDronesUpdate} />
+        <DroneStations onActiveDronesUpdate={onActiveDronesUpdate} />
+        
       </LeafletMap>
     </div>
   );
