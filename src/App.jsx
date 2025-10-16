@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import MapContainer from './components/MapContainer';
 import LocationCard from './components/LocationCard';
 import { policeLocations } from './data/locations';
-import { Search, MapPin } from 'lucide-react';
+import { Search } from 'lucide-react';
+import logo from './assets/logo.png';
+
+
 
 function App() {
   const [selectedLocation, setSelectedLocation] = useState(null);
@@ -20,9 +23,9 @@ function App() {
       <header className="bg-blue-900 text-white shadow-lg z-10">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <MapPin className="w-8 h-8" />
-              <div>
+            <div className="flex items-center space-x-4">
+            <img src={logo} alt="GeoDrone Logo" className="h-12 w-auto" />
+            <div>
                 <h1 className="text-2xl font-bold">Mapa de Policía - Puebla</h1>
                 <p className="text-blue-200 text-sm">Oficinas y casetas de seguridad</p>
               </div>
