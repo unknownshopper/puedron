@@ -1,64 +1,18 @@
-// Drones Dragon Fish patrullando cerca de sus bases
-// Cada dron patrulla en un radio cercano a su base asignada
+// Drones móviles patrullando áreas específicas de Puebla
+// 5 móviles con identificadores claros
 
 export const vehicleRoutes = [
     {
-      id: 'drone-amozoc',
+      id: 'movil-texmelucan',
       name: 'DRON DRAGON FISH – JAC – MÓVIL ESTATAL',
-      unit: 'Dron Amozoc',
-      zone: 'Amozoc',
-      type: 'Dron Móvil',
-      baseId: 'station-amozoc',
-      color: '#3b82f6', // Azul
-      speed: 40, // km/h aproximado
-      route: [
-        // Ruta circular cerca de la base de Amozoc (19.0380, -98.0520)
-        { lat: 19.0380, lng: -98.0520 }, // Base
-        { lat: 19.0400, lng: -98.0500 }, // Norte
-        { lat: 19.0420, lng: -98.0480 }, // Noreste
-        { lat: 19.0430, lng: -98.0500 }, // Este
-        { lat: 19.0420, lng: -98.0530 }, // Sureste
-        { lat: 19.0400, lng: -98.0550 }, // Sur
-        { lat: 19.0370, lng: -98.0560 }, // Suroeste
-        { lat: 19.0350, lng: -98.0540 }, // Oeste
-        { lat: 19.0360, lng: -98.0510 }, // Noroeste
-        { lat: 19.0380, lng: -98.0520 }, // Regreso a base
-      ]
-    },
-    {
-      id: 'drone-europa',
-      name: 'DRON DRAGON FISH – JAC – MÓVIL ESTATAL',
-      unit: 'Dron Boulevard Europa',
-      zone: 'Boulevard Europa',
-      type: 'Dron Móvil',
-      baseId: 'station-europa',
-      color: '#ef4444', // Rojo
-      speed: 45, // km/h aproximado
-      route: [
-        // Ruta circular cerca de la base de Boulevard Europa (19.0050, -98.2550)
-        { lat: 19.0050, lng: -98.2550 }, // Base
-        { lat: 19.0070, lng: -98.2530 }, // Norte
-        { lat: 19.0090, lng: -98.2520 }, // Noreste
-        { lat: 19.0100, lng: -98.2540 }, // Este
-        { lat: 19.0090, lng: -98.2570 }, // Sureste
-        { lat: 19.0070, lng: -98.2580 }, // Sur
-        { lat: 19.0040, lng: -98.2580 }, // Suroeste
-        { lat: 19.0020, lng: -98.2560 }, // Oeste
-        { lat: 19.0030, lng: -98.2540 }, // Noroeste
-        { lat: 19.0050, lng: -98.2550 }, // Regreso a base
-      ]
-    },
-    {
-      id: 'drone-texmelucan',
-      name: 'DRON DRAGON FISH – JAC – MÓVIL ESTATAL',
-      unit: 'Dron San Martín Texmelucan',
+      unit: 'Móvil Texmelucan',
       zone: 'San Martín Texmelucan',
       type: 'Dron Móvil',
       baseId: 'station-texmelucan',
       color: '#10b981', // Verde
       speed: 42, // km/h aproximado
       route: [
-        // Ruta circular cerca de la base de Texmelucan (19.2870, -98.4380)
+        // Ruta circular cerca de Texmelucan (19.2870, -98.4380)
         { lat: 19.2870, lng: -98.4380 }, // Base
         { lat: 19.2890, lng: -98.4360 }, // Norte
         { lat: 19.2910, lng: -98.4350 }, // Noreste
@@ -72,16 +26,84 @@ export const vehicleRoutes = [
       ]
     },
     {
-      id: 'drone-tehuacan',
+      id: 'movil-puebla-sur',
       name: 'DRON DRAGON FISH – JAC – MÓVIL ESTATAL',
-      unit: 'Dron Tehuacán',
+      unit: 'Móvil Puebla Sur',
+      zone: 'Loma Encantada',
+      type: 'Dron Móvil',
+      color: '#3b82f6', // Azul
+      speed: 40, // km/h aproximado
+      route: [
+        // Ruta por Loma Encantada (zona este/sur de Puebla)
+        { lat: 19.0450, lng: -98.1820 }, // Inicio - CAPU
+        { lat: 19.0480, lng: -98.1780 }, // Av. Carmen Serdán
+        { lat: 19.0520, lng: -98.1750 }, // Hacia Loma Encantada
+        { lat: 19.0550, lng: -98.1720 }, // Interior Loma Encantada
+        { lat: 19.0580, lng: -98.1740 }, // Zona residencial
+        { lat: 19.0600, lng: -98.1780 }, // Circuito norte
+        { lat: 19.0580, lng: -98.1820 }, // Regreso
+        { lat: 19.0550, lng: -98.1850 }, // Av. Principal
+        { lat: 19.0520, lng: -98.1830 }, // Conexión
+        { lat: 19.0480, lng: -98.1850 }, // Vuelta
+        { lat: 19.0450, lng: -98.1820 }, // Regreso al inicio
+      ]
+    },
+    {
+      id: 'movil-puebla-norte',
+      name: 'DRON DRAGON FISH – JAC – MÓVIL ESTATAL',
+      unit: 'Móvil Puebla Norte',
+      zone: 'Camino Real del Bosque',
+      type: 'Dron Móvil',
+      color: '#8b5cf6', // Morado
+      speed: 38, // km/h aproximado
+      route: [
+        // Ruta por Camino Real del Bosque (zona norte de Puebla)
+        { lat: 19.0850, lng: -98.2100 }, // Inicio - Camino Real
+        { lat: 19.0880, lng: -98.2080 }, // Norte
+        { lat: 19.0910, lng: -98.2060 }, // Noreste
+        { lat: 19.0930, lng: -98.2080 }, // Este
+        { lat: 19.0920, lng: -98.2110 }, // Sureste
+        { lat: 19.0900, lng: -98.2130 }, // Sur
+        { lat: 19.0870, lng: -98.2140 }, // Suroeste
+        { lat: 19.0840, lng: -98.2130 }, // Oeste
+        { lat: 19.0830, lng: -98.2110 }, // Noroeste
+        { lat: 19.0850, lng: -98.2100 }, // Regreso
+      ]
+    },
+    {
+        id: 'movil-amozoc',
+        name: 'DRON DRAGON FISH – JAC – MÓVIL ESTATAL',
+        unit: 'Móvil Amozoc',
+        zone: 'Rinconada Amozoc 21',
+        type: 'Dron Móvil',
+        baseId: 'station-amozoc',
+        color: '#f59e0b', // Naranja
+        speed: 40, // km/h aproximado
+        route: [
+          // Ruta circular por Rinconada Amozoc 21 (zona residencial)
+          { lat: 19.0420, lng: -98.0480 }, // Inicio - Rinconada Amozoc
+          { lat: 19.0440, lng: -98.0460 }, // Norte - Av. Principal
+          { lat: 19.0460, lng: -98.0450 }, // Noreste - Zona residencial
+          { lat: 19.0475, lng: -98.0465 }, // Este - Circuito interno
+          { lat: 19.0470, lng: -98.0490 }, // Sureste - Área verde
+          { lat: 19.0455, lng: -98.0510 }, // Sur - Zona comercial
+          { lat: 19.0435, lng: -98.0520 }, // Suroeste - Acceso sur
+          { lat: 19.0415, lng: -98.0510 }, // Oeste - Perímetro
+          { lat: 19.0405, lng: -98.0490 }, // Noroeste - Conexión
+          { lat: 19.0420, lng: -98.0480 }, // Regreso al inicio
+        ]
+      },
+    {
+      id: 'movil-tehuacan',
+      name: 'DRON DRAGON FISH – JAC – MÓVIL ESTATAL',
+      unit: 'Móvil Tehuacán',
       zone: 'Tehuacán',
       type: 'Dron Móvil',
       baseId: 'station-tehuacan',
-      color: '#f59e0b', // Naranja
+      color: '#ef4444', // Rojo
       speed: 38, // km/h aproximado
       route: [
-        // Ruta circular cerca de la base de Tehuacán (18.4620, -97.3950)
+        // Ruta circular cerca de Tehuacán (18.4620, -97.3950)
         { lat: 18.4620, lng: -97.3950 }, // Base
         { lat: 18.4640, lng: -97.3930 }, // Norte
         { lat: 18.4660, lng: -97.3920 }, // Noreste

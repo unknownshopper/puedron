@@ -95,11 +95,12 @@ const fetchRouteFromOSRM = async (waypoints) => {
 };
 
 function MovingVehicles({ onVehiclesUpdate }) {
-  const [vehicles, setVehicles] = useState([]);
-  const [routesLoaded, setRoutesLoaded] = useState(false);
-  const animationRef = useRef(null);
-  const startTimeRef = useRef(Date.now());
-  const realRoutesCache = useRef({});
+    const [vehicles, setVehicles] = useState([]);
+    const [routesLoaded, setRoutesLoaded] = useState(false);
+    const animationRef = useRef(null);
+    const startTimeRef = useRef(Date.now());
+    const realRoutesCache = useRef({});
+    const vehiclesRef = useRef([]); // <-- AGREGAR AQUÍ
 
   useEffect(() => {
     // Cargar rutas reales de OSRM
@@ -145,8 +146,9 @@ function MovingVehicles({ onVehiclesUpdate }) {
     loadRealRoutes();
   }, []);
 
+ 
   useEffect(() => {
-    if (!routesLoaded || vehicles.length === 0) return;
+    if (!routesLoaded) return;
 
     // Animación
     const animate = () => {
@@ -155,6 +157,8 @@ function MovingVehicles({ onVehiclesUpdate }) {
       startTimeRef.current = currentTime;
 
       setVehicles(prevVehicles => {
+        if (prevVehicles.length === 0) return prevVehicles;
+        
         const updatedVehicles = prevVehicles.map(vehicle => {
           const route = vehicle.realRoute;
           let { currentSegment, progress } = vehicle;
@@ -191,11 +195,7 @@ function MovingVehicles({ onVehiclesUpdate }) {
           };
         });
         
-        // Notificar al componente padre con los vehículos actualizados
-        if (onVehiclesUpdate) {
-          onVehiclesUpdate(updatedVehicles);
-        }
-        
+        vehiclesRef.current = updatedVehicles;
         return updatedVehicles;
       });
 
@@ -209,7 +209,22 @@ function MovingVehicles({ onVehiclesUpdate }) {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [routesLoaded, vehicles.length]);
+  }, [routesLoaded]); // SOLO depende de routesLoaded
+  
+
+  // Actualizar al padre solo cada segundo (no en cada frame)
+  useEffect(() => {
+    if (!onVehiclesUpdate) return;
+
+    const interval = setInterval(() => {
+      if (vehiclesRef.current.length > 0) {
+        onVehiclesUpdate(vehiclesRef.current);
+      }
+    }, 1000); // Actualizar cada 1 segundo
+
+    return () => clearInterval(interval);
+  }, [onVehiclesUpdate]);
+
 
   if (!routesLoaded) {
     return null; // O un loader si prefieres

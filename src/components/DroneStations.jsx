@@ -85,7 +85,7 @@ function DroneStations({ onActiveDronesUpdate }) {  const [stations] = useState(
         }));
       onActiveDronesUpdate(activeDrones);
     }
-  }, [activeGroup, stations, onActiveDronesUpdate]);
+  }, [activeGroup]); // Solo depende de activeGroup
 
   useEffect(() => {
     // Animar drones volando en círculo alrededor de la base
