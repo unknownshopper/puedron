@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Marker, Popup, Circle, Tooltip } from 'react-leaflet';
+import React, { useState, useEffect, useRef } from 'react';
+import { Marker, Popup, Circle, Tooltip, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { droneStations } from '../data/droneStations';
 import droneImage from '../assets/dronx.png';
+import emerImage from '../assets/emer.png';
 
 // Crear icono de base de drones con luces intermitentes MÁS RÁPIDAS
 const createDroneStationIcon = (isActive) => {
@@ -47,10 +48,41 @@ const createFlyingDroneIcon = () => {
   });
 };
 
-function DroneStations({ onActiveDronesUpdate }) {  const [stations] = useState(droneStations);
+const toRad = (deg) => deg * Math.PI / 180;
+const metersBetween = (a, b) => {
+  const R = 6371000;
+  const dLat = toRad(b.lat - a.lat);
+  const dLng = toRad(b.lng - a.lng);
+  const lat1 = toRad(a.lat);
+  const lat2 = toRad(b.lat);
+  const sinDLat = Math.sin(dLat / 2);
+  const sinDLng = Math.sin(dLng / 2);
+  const h = sinDLat * sinDLat + Math.cos(lat1) * Math.cos(lat2) * sinDLng * sinDLng;
+  return 2 * R * Math.asin(Math.sqrt(h));
+};
+const randomPointAround = (lat, lng, radiusMeters) => {
+  const r = Math.random() * radiusMeters;
+  const t = Math.random() * 2 * Math.PI;
+  const dLat = (r * Math.cos(t)) / 111000;
+  const dLng = (r * Math.sin(t)) / (111000 * Math.cos(toRad(lat)));
+  return { lat: lat + dLat, lng: lng + dLng };
+};
+const createEmergencyIcon = () => {
+  const html = `<div style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;">
+    <img src="${emerImage}" alt="Emergencia" style="width:36px;height:36px;object-fit:contain;filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));"/>
+  </div>`;
+  return L.divIcon({ html, className: 'emergency-marker', iconSize: [40, 40], iconAnchor: [20, 20], popupAnchor: [0, -20] });
+};
+
+function DroneStations({ onActiveDronesUpdate, manualEmergencyTarget }) {  const [stations] = useState(droneStations);
+  const map = useMap();
   const [activeGroup, setActiveGroup] = useState(1);
   const [stationStates, setStationStates] = useState({});
   const [dronePositions, setDronePositions] = useState({});
+  const [emergency, setEmergency] = useState(null);
+  const missionRef = useRef(null);
+  const animRef = useRef(null);
+  const [tick, setTick] = useState(0);
 
   // Definir grupos de bases
   const groups = {
@@ -59,13 +91,109 @@ function DroneStations({ onActiveDronesUpdate }) {  const [stations] = useState(
   };
 
   useEffect(() => {
-    // Alternar grupos cada 30 segundos
     const interval = setInterval(() => {
       setActiveGroup(prev => prev === 1 ? 2 : 1);
     }, 30000);
-
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    const t = setInterval(() => setTick(v => v + 1), 1000);
+    return () => clearInterval(t);
+  }, []);
+
+  // Generador automático inicial (si no hay objetivo manual)
+  useEffect(() => {
+    if (manualEmergencyTarget) return; // si hay objetivo manual, no generar
+    if (emergency || stations.length === 0) return;
+    const s = stations[Math.floor(Math.random() * stations.length)];
+    const target = randomPointAround(s.lat, s.lng, 3000);
+    let nearest = s;
+    let minD = Infinity;
+    stations.forEach(st => {
+      const d = metersBetween({ lat: st.lat, lng: st.lng }, target);
+      if (d < minD) { minD = d; nearest = st; }
+    });
+    const prepMs = 90 * 1000;
+    const travelMs = Math.max(1, Math.round(minD / 900 * 60000));
+    missionRef.current = {
+      assignedId: nearest.id,
+      start: Date.now(),
+      prepMs,
+      travelMs,
+      stationPos: { lat: nearest.lat, lng: nearest.lng },
+      targetPos: target
+    };
+    // asegurar posición inicial visible del dron asignado
+    setDronePositions(prev => ({ ...prev, [nearest.id]: { lat: nearest.lat, lng: nearest.lng } }));
+    setEmergency({ lat: target.lat, lng: target.lng, assignedId: nearest.id });
+    // centrar mapa al área de interés
+    if (map) {
+      map.flyTo([target.lat, target.lng], 15, { duration: 1.2 });
+    }
+  }, [emergency, stations, manualEmergencyTarget, map]);
+
+  // Disparador manual desde UI
+  useEffect(() => {
+    if (!manualEmergencyTarget) return;
+    // cancelar misión previa
+    if (animRef.current) cancelAnimationFrame(animRef.current);
+    missionRef.current = null;
+
+    const target = { lat: manualEmergencyTarget.lat, lng: manualEmergencyTarget.lng };
+    // encontrar base más cercana
+    let nearest = stations[0];
+    let minD = Infinity;
+    stations.forEach(st => {
+      const d = metersBetween({ lat: st.lat, lng: st.lng }, target);
+      if (d < minD) { minD = d; nearest = st; }
+    });
+    const prepMs = 90 * 1000;
+    const travelMs = Math.max(1, Math.round(minD / 900 * 60000));
+
+    missionRef.current = {
+      assignedId: nearest.id,
+      start: Date.now(),
+      prepMs,
+      travelMs,
+      stationPos: { lat: nearest.lat, lng: nearest.lng },
+      targetPos: target
+    };
+    setEmergency({ lat: target.lat, lng: target.lng, assignedId: nearest.id });
+    // centrar mapa al área de interés
+    if (map) {
+      map.flyTo([target.lat, target.lng], 15, { duration: 1.2 });
+    }
+  }, [manualEmergencyTarget, stations, map]);
+
+  useEffect(() => {
+    if (!missionRef.current) return;
+    const animate = () => {
+      const m = missionRef.current;
+      if (!m) return;
+      const now = Date.now();
+      const t0 = m.start;
+      const tPrepEnd = t0 + m.prepMs;
+      const tTravelEnd = tPrepEnd + m.travelMs;
+      let pos = m.stationPos;
+      if (now >= tPrepEnd) {
+        const p = Math.min(1, Math.max(0, (now - tPrepEnd) / m.travelMs));
+        pos = {
+          lat: m.stationPos.lat + (m.targetPos.lat - m.stationPos.lat) * p,
+          lng: m.stationPos.lng + (m.targetPos.lng - m.stationPos.lng) * p,
+        };
+      }
+      setDronePositions(prev => ({ ...prev, [m.assignedId]: pos }));
+      if (now >= tTravelEnd) {
+        missionRef.current = null;
+        setEmergency(null);
+        return;
+      }
+      animRef.current = requestAnimationFrame(animate);
+    };
+    animRef.current = requestAnimationFrame(animate);
+    return () => { if (animRef.current) cancelAnimationFrame(animRef.current); };
+  }, [emergency]);
 
   useEffect(() => {
     // Actualizar estados de las estaciones basado en el grupo activo
@@ -88,30 +216,21 @@ function DroneStations({ onActiveDronesUpdate }) {  const [stations] = useState(
   }, [activeGroup]); // Solo depende de activeGroup
 
   useEffect(() => {
-    // Animar drones volando en círculo alrededor de la base
-    const radius = 0.008; // Radio en grados (~800 metros)
+    const radius = 0.008;
     let angle = 0;
-
     const animationInterval = setInterval(() => {
+      if (missionRef.current) return;
       const newPositions = {};
-      
       stations.forEach(station => {
         if (stationStates[station.id]) {
-          // Calcular posición en círculo
           const offsetLat = radius * Math.cos(angle);
           const offsetLng = radius * Math.sin(angle);
-          
-          newPositions[station.id] = {
-            lat: station.lat + offsetLat,
-            lng: station.lng + offsetLng
-          };
+          newPositions[station.id] = { lat: station.lat + offsetLat, lng: station.lng + offsetLng };
         }
       });
-      
       setDronePositions(newPositions);
-      angle += 0.05; // Velocidad de rotación
-    }, 100); // Actualizar cada 100ms para movimiento suave
-
+      angle += 0.05;
+    }, 100);
     return () => clearInterval(animationInterval);
   }, [stationStates, stations]);
 
@@ -220,24 +339,75 @@ function DroneStations({ onActiveDronesUpdate }) {  const [stations] = useState(
               />
             )}
 
-            {/* Dron volando en círculo */}
-            {isActive && dronePos && (
+            {dronePositions[station.id] && (
               <Marker
-                position={[dronePos.lat, dronePos.lng]}
+                position={[dronePositions[station.id].lat, dronePositions[station.id].lng]}
                 icon={createFlyingDroneIcon()}
                 zIndexOffset={2500}
               >
-                <Tooltip permanent direction="top" offset={[0, -20]} className="emergency-tooltip">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-red-600 font-bold text-xs">🚨 EMERGENCIA</span>
-                    <span className="text-xs text-gray-700">- {station.zone}</span>
-                  </div>
-                </Tooltip>
+                {emergency && missionRef.current && missionRef.current.assignedId === station.id ? (
+                  <Tooltip permanent direction="top" offset={[0, -20]} className="emergency-tooltip">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-red-600 font-bold text-xs">🚨 EMERGENCIA</span>
+                      <span className="text-xs text-gray-700">{(() => {
+                        const m = missionRef.current;
+                        if (!m) return 'ETA 0.0m';
+                        const now = Date.now();
+                        const tPrepEnd = m.start + m.prepMs;
+                        if (now < tPrepEnd) {
+                          const rem = Math.max(0, tPrepEnd - now);
+                          const mm = Math.floor(rem / 60000);
+                          const ss = Math.floor((rem % 60000) / 1000).toString().padStart(2, '0');
+                          return `Preparación ${mm}:${ss}`;
+                        }
+                        const end = tPrepEnd + m.travelMs;
+                        const rem = Math.max(0, end - now) / 60000;
+                        return `ETA ${rem.toFixed(1)}m`;
+                      })()}</span>
+                    </div>
+                  </Tooltip>
+                ) : null}
               </Marker>
             )}
           </React.Fragment>
                 );
             })}
+
+            {emergency && missionRef.current && (
+              <Polyline
+                positions={[[missionRef.current.stationPos.lat, missionRef.current.stationPos.lng],[missionRef.current.targetPos.lat, missionRef.current.targetPos.lng]]}
+                pathOptions={{ color: '#ef4444', weight: 2, opacity: 0.6, dashArray: '6,6' }}
+              />
+            )}
+
+            {emergency && (
+              <Marker
+                position={[emergency.lat, emergency.lng]}
+                icon={createEmergencyIcon()}
+                zIndexOffset={3000}
+              >
+                <Tooltip permanent direction="top" offset={[0, -20]} className="emergency-tooltip">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-red-600 font-bold text-xs">🚨 EMERGENCIA</span>
+                    <span className="text-xs text-gray-700">{(() => {
+                      const m = missionRef.current;
+                      if (!m) return 'ETA 0.0m';
+                      const now = Date.now();
+                      const tPrepEnd = m.start + m.prepMs;
+                      if (now < tPrepEnd) {
+                        const rem = Math.max(0, tPrepEnd - now);
+                        const mm = Math.floor(rem / 60000);
+                        const ss = Math.floor((rem % 60000) / 1000).toString().padStart(2, '0');
+                        return `Preparación ${mm}:${ss}`;
+                      }
+                      const end = tPrepEnd + m.travelMs;
+                      const rem = Math.max(0, end - now) / 60000;
+                      return `ETA ${rem.toFixed(1)}m`;
+                    })()}</span>
+                  </div>
+                </Tooltip>
+              </Marker>
+            )}
           </>
         );
       }

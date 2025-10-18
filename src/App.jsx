@@ -5,8 +5,15 @@ import DroneCard from './components/DroneCard';
 import ActiveDroneCard from './components/ActiveDroneCard';
 import { policeLocations } from './data/locations';
 import { getRandomEmergency, getRandomSpeed, getRandomAltitude } from './data/emergencyTypes';
-import { Search, Plane, Radio } from 'lucide-react';
+import { Search, Plane, Radio, AlertTriangle } from 'lucide-react';
 import logo from './assets/logo.png';
+
+const EMERGENCY_LOCATIONS = {
+  texmelucan_iglesia_santiago: { name: 'Texmelucan · Iglesia de Santiago', lat: 19.2846, lng: -98.4388 },
+  puebla_parroquia_san_jose_la_hacienda: { name: 'Puebla · Parroquia San José La Hacienda', lat: 19.0199, lng: -98.2687 },
+  amozoc_privada_nacarada: { name: 'Amozoc · Privada Nacarada', lat: 19.0428, lng: -98.0385 },
+  tehuacan_aeropuerto: { name: 'Tehuacán · Aeropuerto', lat: 18.497, lng: -97.419 }
+};
 
 function App() {
   const [selectedLocation, setSelectedLocation] = useState(null);
@@ -14,6 +21,7 @@ function App() {
   const [drones, setDrones] = useState([]);
   const [activeDrones, setActiveDrones] = useState([]);
   const activeDronesRef = useRef({});
+  const [manualEmergencyTarget, setManualEmergencyTarget] = useState(null);
 
   const filteredLocations = policeLocations.filter(location =>
     location.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -138,6 +146,21 @@ function App() {
             <p className="text-sm text-gray-500 mt-2">
               {filteredLocations.length} ubicación{filteredLocations.length !== 1 ? 'es' : ''} • {activeDrones.length} emergencia{activeDrones.length !== 1 ? 's' : ''} • {drones.length} patrulla{drones.length !== 1 ? 's' : ''}
             </p>
+
+            <div className="mt-3 grid grid-cols-1 gap-2">
+              <button onClick={() => setManualEmergencyTarget(EMERGENCY_LOCATIONS.texmelucan_iglesia_santiago)} className="flex items-center gap-2 px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm">
+                <AlertTriangle className="w-4 h-4" /> Emergencia: Texmelucan · Iglesia de Santiago
+              </button>
+              <button onClick={() => setManualEmergencyTarget(EMERGENCY_LOCATIONS.puebla_parroquia_san_jose_la_hacienda)} className="flex items-center gap-2 px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm">
+                <AlertTriangle className="w-4 h-4" /> Emergencia: Puebla · Parroquia San José La Hacienda
+              </button>
+              <button onClick={() => setManualEmergencyTarget(EMERGENCY_LOCATIONS.amozoc_privada_nacarada)} className="flex items-center gap-2 px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm">
+                <AlertTriangle className="w-4 h-4" /> Emergencia: Amozoc · Privada Nacarada
+              </button>
+              <button onClick={() => setManualEmergencyTarget(EMERGENCY_LOCATIONS.tehuacan_aeropuerto)} className="flex items-center gap-2 px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm">
+                <AlertTriangle className="w-4 h-4" /> Emergencia: Tehuacán · Aeropuerto
+              </button>
+            </div>
           </div>
 
           <div className="p-4 space-y-3">
@@ -206,6 +229,7 @@ function App() {
             onLocationSelect={setSelectedLocation}
             onDronesUpdate={handleDronesUpdate}
             onActiveDronesUpdate={handleActiveDronesUpdate}
+            manualEmergencyTarget={manualEmergencyTarget}
           />
         </main>
       </div>

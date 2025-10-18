@@ -21,8 +21,11 @@ function MapController({ selectedLocation }) {
   return null;
 }
 
-// Crear iconos personalizados para cada tipo
+// Crear iconos personalizados para cada tipo (con cache)
+const iconCache = new Map();
 const createCustomIcon = (type) => {
+  if (iconCache.has(type)) return iconCache.get(type);
+
   const colors = {
     'Oficina Central': '#1e40af',
     'Caseta': '#059669',
@@ -55,16 +58,34 @@ const createCustomIcon = (type) => {
     </svg>
   `;
   
-  return L.divIcon({
+  const icon = L.divIcon({
     html: svgIcon,
     className: 'custom-marker',
     iconSize: [width, height],
     iconAnchor: [width/2, height],
     popupAnchor: [0, -height]
   });
+
+  iconCache.set(type, icon);
+  return icon;
 };
 
-function MapContainer({ locations, selectedLocation, onLocationSelect, onDronesUpdate, onActiveDronesUpdate }) {  const center = [19.0414, -98.2063]; // Centro de Puebla
+// Ajustar a todas las ubicaciones al cargar (solo una vez)
+function FitBounds({ locations }) {
+  const map = useMap();
+  const didFitRef = React.useRef(false);
+
+  useEffect(() => {
+    if (didFitRef.current) return;
+    if (!locations || locations.length === 0) return;
+    const bounds = L.latLngBounds(locations.map(l => [l.lat, l.lng]));
+    map.fitBounds(bounds, { padding: [40, 40] });
+    didFitRef.current = true;
+  }, [locations, map]);
+  return null;
+}
+
+function MapContainer({ locations, selectedLocation, onLocationSelect, onDronesUpdate, onActiveDronesUpdate, manualEmergencyTarget }) {  const center = [19.0414, -98.2063]; // Centro de Puebla
   
   return (
     <div className="w-full h-full relative">
@@ -78,6 +99,8 @@ function MapContainer({ locations, selectedLocation, onLocationSelect, onDronesU
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+
+        <FitBounds locations={locations} />
         
         <MapController selectedLocation={selectedLocation} />
         
@@ -119,7 +142,7 @@ function MapContainer({ locations, selectedLocation, onLocationSelect, onDronesU
         ))}
         
         <MovingVehicles onVehiclesUpdate={onDronesUpdate} />
-        <DroneStations onActiveDronesUpdate={onActiveDronesUpdate} />
+        <DroneStations onActiveDronesUpdate={onActiveDronesUpdate} manualEmergencyTarget={manualEmergencyTarget} />
         
       </LeafletMap>
     </div>

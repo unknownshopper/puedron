@@ -3,10 +3,16 @@ import { Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import { vehicleRoutes } from '../data/vehicleRoutes';
 
-// Crear icono personalizado para vehículos en movimiento
+// Crear icono personalizado para vehículos en movimiento (memoizado)
+const vehicleIconCache = new Map();
 const createVehicleIcon = (color, rotation = 0) => {
+  // Redondear rotación para limitar variaciones (mejora de cache)
+  const rot = Math.round(rotation / 10) * 10;
+  const key = `${color}-${rot}`;
+  if (vehicleIconCache.has(key)) return vehicleIconCache.get(key);
+
   const svgIcon = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" style="transform: rotate(${rotation}deg);">
+    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" style="transform: rotate(${rot}deg);">
       <defs>
         <filter id="shadow-vehicle" x="-50%" y="-50%" width="200%" height="200%">
           <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.6"/>
@@ -30,13 +36,16 @@ const createVehicleIcon = (color, rotation = 0) => {
     </svg>
   `;
   
-  return L.divIcon({
+  const icon = L.divIcon({
     html: svgIcon,
     className: 'vehicle-marker',
     iconSize: [40, 40],
     iconAnchor: [20, 20],
     popupAnchor: [0, -20]
   });
+
+  vehicleIconCache.set(key, icon);
+  return icon;
 };
 
 // Calcular ángulo de rotación entre dos puntos
@@ -96,11 +105,12 @@ const fetchRouteFromOSRM = async (waypoints) => {
 
 function MovingVehicles({ onVehiclesUpdate }) {
     const [vehicles, setVehicles] = useState([]);
-    const [routesLoaded, setRoutesLoaded] = useState(false);
-    const animationRef = useRef(null);
-    const startTimeRef = useRef(Date.now());
-    const realRoutesCache = useRef({});
-    const vehiclesRef = useRef([]); // <-- AGREGAR AQUÍ
+  const [routesLoaded, setRoutesLoaded] = useState(false);
+  const animationRef = useRef(null);
+  const startTimeRef = useRef(Date.now());
+  const realRoutesCache = useRef({});
+  const vehiclesRef = useRef([]); // Estado "fuera de React" para animación
+  const lastUiUpdateRef = useRef(0); // Throttle de UI
 
   useEffect(() => {
     // Cargar rutas reales de OSRM
@@ -156,48 +166,42 @@ function MovingVehicles({ onVehiclesUpdate }) {
       const deltaTime = (currentTime - startTimeRef.current) / 1000; // segundos
       startTimeRef.current = currentTime;
 
-      setVehicles(prevVehicles => {
-        if (prevVehicles.length === 0) return prevVehicles;
+      // Actualizar datos en memoria (sin re-render)
+      const updatedVehicles = (vehiclesRef.current.length ? vehiclesRef.current : vehicles).map(vehicle => {
+        const route = vehicle.realRoute;
+        let { currentSegment, progress } = vehicle;
         
-        const updatedVehicles = prevVehicles.map(vehicle => {
-          const route = vehicle.realRoute;
-          let { currentSegment, progress } = vehicle;
-          
-          // Velocidad de progreso basada en la velocidad del vehículo
-          // Ajustamos para que se mueva de forma más realista
-          const speedFactor = vehicle.speed / 100;
-          progress += deltaTime * speedFactor * 0.3;
+        const speedFactor = vehicle.speed / 100;
+        progress += deltaTime * speedFactor * 0.3;
 
-          // Si completamos el segmento actual
-          if (progress >= 1) {
-            progress = 0;
-            currentSegment = (currentSegment + 1) % route.length;
-          }
+        if (progress >= 1) {
+          progress = 0;
+          currentSegment = (currentSegment + 1) % route.length;
+        }
 
-          // Calcular posición actual
-          const startPoint = route[currentSegment];
-          const endPoint = route[(currentSegment + 1) % route.length];
-          const position = interpolatePosition(startPoint, endPoint, progress);
-          
-          // Calcular rotación
-          const rotation = calculateBearing(startPoint, endPoint);
+        const startPoint = route[currentSegment];
+        const endPoint = route[(currentSegment + 1) % route.length];
+        const position = interpolatePosition(startPoint, endPoint, progress);
+        const rotation = calculateBearing(startPoint, endPoint);
+        const newPath = [...vehicle.path, position].slice(-30);
 
-          // Actualizar rastro (últimas 30 posiciones para mejor visualización)
-          const newPath = [...vehicle.path, position].slice(-30);
-
-          return {
-            ...vehicle,
-            currentSegment,
-            progress,
-            position,
-            rotation,
-            path: newPath
-          };
-        });
-        
-        vehiclesRef.current = updatedVehicles;
-        return updatedVehicles;
+        return {
+          ...vehicle,
+          currentSegment,
+          progress,
+          position,
+          rotation,
+          path: newPath
+        };
       });
+
+      vehiclesRef.current = updatedVehicles;
+
+      // Aplicar a React con throttle (cada ~250ms)
+      if (currentTime - lastUiUpdateRef.current > 250) {
+        lastUiUpdateRef.current = currentTime;
+        setVehicles(updatedVehicles);
+      }
 
       animationRef.current = requestAnimationFrame(animate);
     };
