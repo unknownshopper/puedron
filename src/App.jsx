@@ -4,6 +4,7 @@ import LocationCard from './components/LocationCard';
 import DroneCard from './components/DroneCard';
 import ActiveDroneCard from './components/ActiveDroneCard';
 import { policeLocations } from './data/locations';
+import { droneStations } from './data/droneStations';
 import { getRandomEmergency, getRandomSpeed, getRandomAltitude } from './data/emergencyTypes';
 import { Search, Plane, Radio, AlertTriangle } from 'lucide-react';
 import logo from './assets/logo.png';
@@ -13,6 +14,17 @@ const EMERGENCY_LOCATIONS = {
   puebla_parroquia_san_jose_la_hacienda: { name: 'Puebla · Parroquia San José La Hacienda', lat: 19.0199, lng: -98.2687 },
   amozoc_privada_nacarada: { name: 'Amozoc · Privada Nacarada', lat: 19.0428, lng: -98.0385 },
   tehuacan_aeropuerto: { name: 'Tehuacán · Aeropuerto', lat: 18.497, lng: -97.419 }
+};
+
+const toRad = (deg) => deg * Math.PI / 180;
+const metersBetween = (a, b) => {
+  const R = 6371000;
+  const dLat = toRad(b.lat - a.lat);
+  const dLng = toRad(b.lng - a.lng);
+  const lat1 = toRad(a.lat);
+  const lat2 = toRad(b.lat);
+  const h = Math.sin(dLat/2)**2 + Math.cos(lat1)*Math.cos(lat2)*Math.sin(dLng/2)**2;
+  return 2 * R * Math.asin(Math.sqrt(h));
 };
 
 function App() {
@@ -148,18 +160,29 @@ function App() {
             </p>
 
             <div className="mt-3 grid grid-cols-1 gap-2">
-              <button onClick={() => setManualEmergencyTarget(EMERGENCY_LOCATIONS.texmelucan_iglesia_santiago)} className="flex items-center gap-2 px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm">
-                <AlertTriangle className="w-4 h-4" /> Emergencia: Texmelucan · Iglesia de Santiago
-              </button>
-              <button onClick={() => setManualEmergencyTarget(EMERGENCY_LOCATIONS.puebla_parroquia_san_jose_la_hacienda)} className="flex items-center gap-2 px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm">
-                <AlertTriangle className="w-4 h-4" /> Emergencia: Puebla · Parroquia San José La Hacienda
-              </button>
-              <button onClick={() => setManualEmergencyTarget(EMERGENCY_LOCATIONS.amozoc_privada_nacarada)} className="flex items-center gap-2 px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm">
-                <AlertTriangle className="w-4 h-4" /> Emergencia: Amozoc · Privada Nacarada
-              </button>
-              <button onClick={() => setManualEmergencyTarget(EMERGENCY_LOCATIONS.tehuacan_aeropuerto)} className="flex items-center gap-2 px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm">
-                <AlertTriangle className="w-4 h-4" /> Emergencia: Tehuacán · Aeropuerto
-              </button>
+              {Object.entries(EMERGENCY_LOCATIONS).map(([key, loc]) => {
+                let nearest = droneStations[0];
+                let minD = Infinity;
+                droneStations.forEach(st => {
+                  const d = metersBetween({ lat: st.lat, lng: st.lng }, { lat: loc.lat, lng: loc.lng });
+                  if (d < minD) { minD = d; nearest = st; }
+                });
+                const distanceKm = (minD / 1000).toFixed(1);
+                const speedMpm = 900; // m/min
+                const altitude = getRandomAltitude();
+                const type = getRandomEmergency();
+                const label = `${loc.name} • ${distanceKm} km • Tipo: ${type} • Vel: ${speedMpm} m/min • Alt: ${altitude} m`;
+                const payload = { ...loc, speedMpm, altitude, type };
+                return (
+                  <button
+                    key={key}
+                    onClick={() => setManualEmergencyTarget(payload)}
+                    className="flex items-center gap-2 px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm text-left"
+                  >
+                    <AlertTriangle className="w-4 h-4" /> {label}
+                  </button>
+                );
+              })}
             </div>
           </div>
 

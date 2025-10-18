@@ -149,7 +149,10 @@ function DroneStations({ onActiveDronesUpdate, manualEmergencyTarget }) {  const
       if (d < minD) { minD = d; nearest = st; }
     });
     const prepMs = 90 * 1000;
-    const travelMs = Math.max(1, Math.round(minD / 900 * 60000));
+    const speedMpm = manualEmergencyTarget.speedMpm ?? 900; // m/min
+    const altitude = manualEmergencyTarget.altitude ?? 120; // m (fallback)
+    const type = manualEmergencyTarget.type ?? 'Incidente';
+    const travelMs = Math.max(1, Math.round(minD / speedMpm * 60000));
 
     missionRef.current = {
       assignedId: nearest.id,
@@ -157,8 +160,13 @@ function DroneStations({ onActiveDronesUpdate, manualEmergencyTarget }) {  const
       prepMs,
       travelMs,
       stationPos: { lat: nearest.lat, lng: nearest.lng },
-      targetPos: target
+      targetPos: target,
+      distanceMeters: minD,
+      speedMpm,
+      altitude,
+      type
     };
+    setDronePositions(prev => ({ ...prev, [nearest.id]: { lat: nearest.lat, lng: nearest.lng } }));
     setEmergency({ lat: target.lat, lng: target.lng, assignedId: nearest.id });
     // centrar mapa al área de interés
     if (map) {
@@ -354,15 +362,20 @@ function DroneStations({ onActiveDronesUpdate, manualEmergencyTarget }) {  const
                         if (!m) return 'ETA 0.0m';
                         const now = Date.now();
                         const tPrepEnd = m.start + m.prepMs;
+                        const info = m.distanceMeters !== undefined ? (() => {
+  const distKm = m.distanceMeters / 1000;
+  const distLabel = distKm >= 1 ? `${distKm.toFixed(1)} km` : `${Math.round(m.distanceMeters)} m`;
+  return ` • Dist Base→Emergencia: ${distLabel} • Vel: ${m.speedMpm} m/min • Alt: ${m.altitude} m • Tipo: ${m.type}`;
+})() : '';
                         if (now < tPrepEnd) {
                           const rem = Math.max(0, tPrepEnd - now);
                           const mm = Math.floor(rem / 60000);
                           const ss = Math.floor((rem % 60000) / 1000).toString().padStart(2, '0');
-                          return `Preparación ${mm}:${ss}`;
+                          return `Preparación ${mm}:${ss}${info}`;
                         }
                         const end = tPrepEnd + m.travelMs;
                         const rem = Math.max(0, end - now) / 60000;
-                        return `ETA ${rem.toFixed(1)}m`;
+                        return `ETA ${rem.toFixed(1)}m${info}`;
                       })()}</span>
                     </div>
                   </Tooltip>
